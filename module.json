@@ -1,0 +1,7 @@
+{
+    "id": "blog",
+    "name": "Blog module",
+    "description": "",
+    "keywords": ["blog"],
+	"version": "0.10",
+}
