@@ -6,7 +6,6 @@
  * The followings are the available columns in table 'blog':
  *         
  * @property integer $id
- * @property string $guid
  * @property string $title
  * @property string $message
  * @property string $created_at
@@ -19,17 +18,8 @@
  */
 class Blog extends HActiveRecordContent
 {
-    
-    public $editRoute = '//blog/index/edit';
-
-    public function behaviors()
-    {
-        return array(
-            'HGuidBehavior' => array(
-                'class' => 'application.behaviors.HGuidBehavior',
-            ),
-        );
-    }
+    public $autoAddToWall = false;
+    public $editRoute = '//blog/blog/edit';
     
     /**
      * Returns the static model of the specified AR class.
@@ -83,14 +73,18 @@ class Blog extends HActiveRecordContent
     
     public function getUrl($parameters = array())
     {
-        return $this->createUrl('//blog/index/blog', $parameters);
+        return $this->createUrl('//blog/blog/blog', $parameters);
     }
 
     
     public function createUrl($route, $params = array(), $ampersand = '&')
     {
-        if (!isset($params['guid'])) {
-            $params['guid'] = $this->guid;
+        if (!isset($params['id'])) {
+            $params['id'] = $this->id;
+        }
+        
+        if (!isset($params['sguid'])) {
+            $params['sguid'] = $this->content->container->guid;
         }
     
         if (Yii::app()->getController() !== null) {
@@ -98,5 +92,88 @@ class Blog extends HActiveRecordContent
         } else {
             return Yii::app()->createUrl($route, $params, $ampersand);
         }
+    }
+    
+    
+    public function canDelete($userId = "")
+    {
+        if ($userId == "")
+            $userId = Yii::app()->user->id;
+
+        if ($this->created_by == $userId)
+            return true;
+        
+        if (Yii::app()->user->isAdmin()) {
+            return true;
+        }
+
+        return false;
+    }
+    
+    public function canWrite($userId = "")
+    {
+        if ($userId == "")
+            $userId = Yii::app()->user->id;
+    
+        if ($this->created_by == $userId)
+            return true;
+    
+        return false;
+    }
+    
+    
+    public function getWallOut()
+    {
+        return Yii::app()->getController()->widget('application.modules.blog.widgets.BlogWallEntryWidget', array('blog' => $this), true);
+    }
+    
+    public function getContentTitle()
+    {
+        return Yii::t('BlogModule.models_Blog', 'article') . " \"" . Helpers::truncateText($this->title, 60) . "\"";
+    }
+   
+    
+    public function afterSave()
+    {
+    
+        parent::afterSave();
+    
+        if ($this->published && $this->created_at == $this->updated_at) {
+            $activity = Activity::CreateForContent($this);
+            $activity->type = "BlogCreated";
+            $activity->module = "blog";
+            $activity->save();
+            $activity->fire();
+            
+            $this->content->addToWall();
+        }
+        
+        return true;
+    }
+    
+    public function getNextOrPrev($nextOrPrev)
+    {
+        if ($nextOrPrev == "prev")
+            $order = "updated_at ASC";
+        if ($nextOrPrev == "next")
+            $order = "updated_at DESC";
+        
+        $criteria = new CDbCriteria();
+        $criteria->mergeWith(array(
+            'join' => 'LEFT JOIN content ON content.object_model = "Blog" and content.object_id = t.id'
+        ));
+        $criteria->addCondition("published IS NOT NULL");
+        $criteria->addCondition("content.space_id = " . $this->content->container->id);
+        $criteria->order = $order;
+        
+        $blogs = Blog::model()->findAll($criteria);
+        
+        foreach ($blogs as $i => $r) {
+            if ($r->id == $this->id) {
+                return isset($blogs[$i + 1]) ? $blogs[$i + 1] : NULL;
+            }
+        }
+        
+        return null;
     }
 }

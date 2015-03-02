@@ -1,5 +1,8 @@
 <?php
 
+Yii::setPathOfAlias('cebe',Yii::getPathOfAlias('blog.vendors.cebe'));
+
+
 class BlogMarkdown extends cebe\markdown\GithubMarkdown
 {
 
@@ -111,5 +114,4 @@ REGEXP;
         }
         return false;
     }
-
 }

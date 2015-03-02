@@ -1,27 +1,45 @@
-<div class="media" id="<?php echo $blog->getUniqueId()?>">
+<div class="blog">
 
-	<img class="media-object img-rounded pull-left"
-		data-src="holder.js/32x32" alt="32x32"
-		style="width: 32px; height: 32px;"
-		src="<?php echo $blog->user->getProfileImage()->getUrl(); ?>">
+    <a class="title" href="<?php echo $blog->getUrl()?>"><strong><?php echo $blog->title; ?></strong></a>
 
-	<!-- show content -->
-	<div class="media-body">
+    <div class="media blog-list-entry" id="<?php echo $blog->getUniqueId()?>">
+        
+        <?php if (($imageSource = MarkdownViewHelper::getInstance()->getImageSource($blog->message))){?>
+        	<img class="image pull-left"
+        		data-src="holder.js/184x104" alt="184x104"
+        		src="<?php print $imageSource; ?>">
+        <?php
+        }
+        else{?>
+        <div class="wall-comment-icon image pull-left">
+            <i class="fa fa-comments"></i>
+        </div>
+        <?php }?>
 
-		<ul class="nav nav-pills" style="position: absolute; right: 10px;">
-			<li class="dropdown"><a class="dropdown-toggle"
-				data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i></a>
-				<ul class="dropdown-menu pull-right">
-                    <?php $this->widget('application.modules.blog.widgets.BlogEntryControls', array('object' => $blog)); ?>
-                </ul>
-            </li>
-		</ul>
-		<a href="<?php echo $blog->getUrl()?>"><strong><?php echo $blog->title; ?></strong></a>
-
-		<br /> <span class="time"><?php echo Yii::t('BlogModule.views_blogEntry', 'started by')?> </span> <?php echo " ".$blog->user->username;?> 
-                            
-        <span class="time" title="<?php echo $blog->created_at; ?>"><?php echo $blog->created_at; ?></span>
-	</div>
-
-	<hr />
+    	<!-- show content -->
+    	<div class = "content blog-text" >              
+            <span class="time" title="<?php echo $blog->created_at; ?>"><?php echo $blog->created_at; ?></span>
+            <p id="blog-message-<?php echo $blog->id?>" class="blog-message"><?php echo MarkdownViewHelper::getInstance()->getPlainText($blog->message); ?></p><br/>
+            
+            <a class="more-link-post" style="margin: 20px 0 20px 0; font-weight:bold;" href="<?php echo $blog->getUrl();?>">
+                <?php echo Yii::t('BlogModule.views_blogEntry', 'Read more'); ?>
+            </a>
+            <span class="pull-right addon">
+                <i class="fa fa-thumbs-up"></i><span><?php echo count(Like::GetLikes('Blog', $blog->id));?></span>
+                <i class="fa fa-comments"></i><span><?php echo Comment::GetCommentCount('Blog', $blog->id);?></span></span>
+    	</div>
+    
+     
+    </div>
 </div>
+<hr/>
+
+<script type="text/javascript">
+    var p = $('#blog-message-<?php echo $blog->id?>');
+    var divh=p.parent().height();
+    while ($(p).outerHeight()>divh) {
+        $(p).text(function (index, text) {
+            return text.replace(/\W*\s(\S)*$/, '...');
+        });
+    }
+</script>

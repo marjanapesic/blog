@@ -6,10 +6,9 @@ class m150219_124909_initial extends EDbMigration
 	{ 
 	    $this->createTable('blog', array(
 	        'id' => 'pk',
-	        'guid' => 'varchar(45) DEFAULT NULL',
 	        'title' => 'varchar(255) DEFAULT NULL',
 	        'message' => 'text DEFAULT NULL',
-	        'published' => 'datetime default NULL',
+	        'published' => 'tinyint(1) default 0',
 	        'created_at' => 'datetime NOT NULL',
 	        'created_by' => 'int(11) NOT NULL',
 	        'updated_at' => 'datetime NOT NULL',

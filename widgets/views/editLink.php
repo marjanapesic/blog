@@ -1,9 +1,8 @@
-<li>
-    <?php
-    echo HHtml::link('<i class="fa fa-pencil"></i> ' . Yii::t('BlogModule.widgets_views_editLink', 'Edit'), 
-        Yii::app()->createUrl($editRoute, array('guid' => $id)),
-        array(
-        //'success' => "js:function(html){ $('.preferences .dropdown').removeClass('open'); $('#" . $object->getUniqueId() . "').replaceWith(html); }"
-    ));
-    ?>
-</li>
+<?php
+echo HHtml::link(Yii::t('BlogModule.widgets_views_editLink', 'Edit'), Yii::app()->createUrl($object->editRoute, array(
+    'id' => $object->id,
+    'sguid' => $object->content->container->guid
+)), array(
+    'class' => 'btn btn-xs btn-primary pull-right'
+));
+?>

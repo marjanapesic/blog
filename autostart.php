@@ -11,7 +11,7 @@ Yii::app()->moduleManager->register(array(
     ),
     // Events to Catch 
     'events' => array(
-        array('class' => 'TopMenuWidget', 'event' => 'onInit', 'callback' => array('BlogModule', 'onTopMenuInit')),
+        array('class' => 'SpaceMenuWidget', 'event' => 'onInit', 'callback' => array('BlogModule', 'onSpaceMenuInit')),
     ),
 ));
 ?>

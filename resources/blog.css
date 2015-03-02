@@ -1,0 +1,60 @@
+.blog table {
+	width: 100%;	
+	margin:10px;
+}
+
+.blog .wall-comment-icon {
+	 width: 13%;	 
+	 font-size: 65px;
+	 text-align: center; 
+	 padding: 0px;
+	 vertical-align: top;
+}
+
+.blog .wall-blog-content{
+	padding-left: 15px; 
+	padding-right: 15px;
+}
+
+.blog  .wall-blog-content .blog-title{
+	font-weight: bold; 
+	font-size: 16px;
+}
+
+.blog .wall-blog-content .short-content {
+	max-height: 78px; 
+	overflow: hidden;
+}
+				
+.blog .title{
+	font-size: 18px;
+}
+
+.blog .blog-list-entry {
+	max-height: 105px;
+}
+
+.blog .blog-list-entry .blog-text{
+	max-height: 105px;
+}		
+
+.blog-text .addon {
+	text-indent: 10px; margin-right:20px; padding-right:5px;
+}
+
+.blog .blog-list-entry .blog-message{
+	display: inline; max-height: 90px;
+}
+
+.blog .blog-list-entry i+span{
+	  margin-left: 5px;
+}
+
+.blog .blog-list-entry .image {
+	width: 184px; height: 104px;
+}
+
+.blog-draft-shortmsg {
+	color: #4cd9c0;
+	font-weight: bold;
+}
