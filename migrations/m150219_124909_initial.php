@@ -14,8 +14,7 @@ class m150219_124909_initial extends EDbMigration
 	        'updated_at' => 'datetime NOT NULL',
 	        'updated_by' => 'int(11) NOT NULL',
 	    ), '');
-	    
-	    $this->createIndex('unique_guid', 'blog', 'guid', true);
+	   
 	}
 
 	public function down()

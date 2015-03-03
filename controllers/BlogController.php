@@ -73,7 +73,7 @@ class BlogController extends ContentContainerController
         $blogs = $dataProvider->getData();
         $pages = $dataProvider->getPagination();
         
-        $output = $this->render('index', array(
+        $this->render('index', array(
             'blogs' => $blogs,
             'pages' => $pages
         ));
