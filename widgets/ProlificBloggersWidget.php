@@ -18,7 +18,7 @@ class ProlificBloggersWidget extends HWidget
         $cmd = Yii::app()->db->createCommand()
         ->select('user.*, count(*) as cnt')
         ->from('user')
-        ->join('blog','blog.created_by = user.id and blog.published IS NOT NULL and blog.created_at >= NOW() - INTERVAL 30 DAY')
+        ->join('blog','blog.created_by = user.id and blog.published = 1 and blog.created_at >= NOW() - INTERVAL 30 DAY')
         ->join('content', 'content.object_model="Blog" and content.object_id=blog.id and content.space_id='.Yii::app()->getController()->getSpace()->id)
         ->group('user.id')
         ->having('cnt>0')

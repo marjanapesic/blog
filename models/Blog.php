@@ -95,33 +95,6 @@ class Blog extends HActiveRecordContent
     }
     
     
-    public function canDelete($userId = "")
-    {
-        if ($userId == "")
-            $userId = Yii::app()->user->id;
-
-        if ($this->created_by == $userId)
-            return true;
-        
-        if (Yii::app()->user->isAdmin()) {
-            return true;
-        }
-
-        return false;
-    }
-    
-    public function canWrite($userId = "")
-    {
-        if ($userId == "")
-            $userId = Yii::app()->user->id;
-    
-        if ($this->created_by == $userId)
-            return true;
-    
-        return false;
-    }
-    
-    
     public function getWallOut()
     {
         return Yii::app()->getController()->widget('application.modules.blog.widgets.BlogWallEntryWidget', array('blog' => $this), true);
@@ -162,7 +135,7 @@ class Blog extends HActiveRecordContent
         $criteria->mergeWith(array(
             'join' => 'LEFT JOIN content ON content.object_model = "Blog" and content.object_id = t.id'
         ));
-        $criteria->addCondition("published IS NOT NULL");
+        $criteria->addCondition("published = 1");
         $criteria->addCondition("content.space_id = " . $this->content->container->id);
         $criteria->order = $order;
         

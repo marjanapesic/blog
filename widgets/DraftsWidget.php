@@ -17,7 +17,7 @@ class DraftsWidget extends HWidget
         $criteria->mergeWith(array(
             'join'=>'INNER JOIN content ON content.object_model="Blog" and content.object_id=t.id and content.space_id='.$space->id
         ));
-        $criteria->condition = "t.published IS NULL and t.created_by=".Yii::app()->user->id;
+        $criteria->condition = "t.published = 0 and t.created_by=".Yii::app()->user->id;
         
         $drafts = Blog::model()->findAll($criteria);
 

@@ -58,7 +58,7 @@ class BlogController extends ContentContainerController
         $criteria->mergeWith(array(
             'join'=>'LEFT JOIN content ON content.object_model = "Blog" and content.object_id = t.id',
         ));
-        $criteria->addCondition("published IS NOT NULL");
+        $criteria->addCondition("published = 1");
         $criteria->addCondition("content.space_id = ".$this->contentContainer->id);
         $criteria->order = 'updated_at DESC';
         
@@ -88,7 +88,6 @@ class BlogController extends ContentContainerController
        /* if(!$this->contentContainer->isMember())
             return $this->redirect($this->createUrl('//space/space', array('sguid' => $this->contentContainer->guid)));*/
         
-        //$guid = Yii::app()->request->getQuery('guid');
         $id = Yii::app()->request->getParam('id');
         $blog = Blog::model()->findByAttributes(array('id' => $id));
         
@@ -158,7 +157,7 @@ class BlogController extends ContentContainerController
        // $content = Content::get($model, $id);
         $blog = Blog::model()->findByPk($id);
         
-        if ($blog->canDelete() && $blog->delete()) {
+        if ($blog->content->canDelete() && $blog->delete()) {
             return $this->htmlRedirect($this->createUrl('//blog/blog/index', array('sguid'=> $this->contentContainer->guid)));
         }
         
@@ -179,9 +178,9 @@ class BlogController extends ContentContainerController
         $blog = Blog::model()->findByAttributes(array('id' => $id));
         if($blog == null)
             throw new CHttpException(404, Yii::t('BlogModule.controller_IndexController', 'Blog post not found!'));
+        if(!$blog->content->canWrite())
+            throw new CHttpException(403, Yii::t('BlogModule.controller_IndexController', 'Access denied!'));
         
-
-              
         $this->render('create', array('model' => $blog, 'sguid' => $blog->content->container->guid));
     }
 }

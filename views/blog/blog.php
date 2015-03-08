@@ -3,7 +3,7 @@
 	<div class="panel panel-default" id="<?php echo $blog->getUniqueId(); ?>">
 		<div class="panel-body">
 
-            <div class="media" id="<?php echo $blog->getUniqueId()?>">
+            <div class="media" id="<?php echo $blog->getUniqueId()?>" style="overflow: visible;">
 
                 <!-- Next and previous links -->
                 <?php $nextBlog = $blog->getNextOrPrev("next");?>

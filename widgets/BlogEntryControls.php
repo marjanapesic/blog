@@ -17,13 +17,13 @@ class BlogEntryControls extends StackWidget {
 
     public function run()
     {
-        if ($this->object->editRoute != "" && $this->object->canWrite()) {
+        if ($this->object->editRoute != "" && $this->object->content->canWrite()) {
             $this->render('editLink', array(
                 'object' => $this->object,
             ));
         }
         
-        if ($this->object->canDelete()) {
+        if ($this->object->content->canDelete()) {
             $this->render('deleteLink', array(
                 'model' => $this->object,
                 'title' => Yii::t('BlogModule.widgets_BlogEntryControls', 'Confirm blog post deletion'),
